@@ -50,7 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure AWS Credentials
+      - name: Configure AWS
         id: aws-creds
         uses: aws-actions/configure-aws-credentials@v5.1.0
         with:
@@ -59,25 +59,25 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
 
-      # Login
+
       - name: Login to Amazon ECR
         run: |
           aws ecr get-login-password --region eu-west-1 \
           | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com
 
-      # Build image
-      - name: Build Docker image
+
+      - name: Build image
         run: |
           docker build -t django-polls .
 
-      # Tag image
-      - name: Tag Docker image for ECR
+
+      - name: Tag image for ECR
         run: |
           docker tag django-polls:latest \
             ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com/django-polls:latest
 
-      # Push image
-      - name: Push Docker image to ECR
+
+      - name: Push image to ECR
         run: |
           docker push \
             ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com/django-polls:latest
