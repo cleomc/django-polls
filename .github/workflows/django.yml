@@ -18,7 +18,7 @@ env:
                                                # file, e.g. .aws/task-definition.json
 
 jobs:
-  Django:
+  django:
 
     runs-on: ubuntu-latest
     strategy:
@@ -42,7 +42,7 @@ jobs:
       run: |
         python manage.py test
 
-  Docker:
+  docker:
 
     runs-on: ubuntu-latest
     permissions:
@@ -117,6 +117,7 @@ jobs:
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
   
   deploy:
+    needs: docker
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
